@@ -12,6 +12,7 @@ public class LoginPage {
     private Page page;
 
     // Locators
+    private String logo = ".login_logo";
     private String usernameField = "#user-name";
     private String passwordField = "#password";
     private String loginButton = "#login-button";
@@ -26,6 +27,8 @@ public class LoginPage {
     // Actions
     public void navigateToLoginPage() {
         page.navigate("https://www.saucedemo.com/");
+        assertThat(page.locator(logo)).isVisible();
+        assertThat(page).hasTitle("Swag Labs");
     }
 
     public void enterUsername(String username) {
