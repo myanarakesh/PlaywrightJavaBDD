@@ -29,4 +29,9 @@ public class LoginSteps {
         loginPage.enterPassword(password);
         loginPage.clickLogin();
     }
+
+    @Then("user should see {string} error on login screen")
+    public void userShouldSeeErrorOnLoginScreen(String message) {
+        loginPage.validateErrorMessage(message);
+    }
 }
