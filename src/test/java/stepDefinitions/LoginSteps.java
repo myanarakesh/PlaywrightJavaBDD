@@ -17,16 +17,16 @@ public class LoginSteps {
         loginPage.navigateToLoginPage();
     }
 
-    @When("user enters valid credentials")
-    public void user_enters_valid_credentials() {
-        loginPage.enterUsername("standard_user");
-        loginPage.enterPassword("secret_sauce");
-        loginPage.clickLogin();
-    }
-
     @Then("user should see the product inventory page")
     public void user_should_see_the_product_inventory_page() {
         inventoryPage = new InventoryPage(Hooks.page);
         assertTrue(inventoryPage.isOnInventoryPage());
+    }
+
+    @When("user enters {string} and {string}")
+    public void userEntersAnd(String username, String password) {
+        loginPage.enterUsername(username);
+        loginPage.enterPassword(password);
+        loginPage.clickLogin();
     }
 }
