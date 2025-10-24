@@ -1,8 +1,10 @@
 Feature: Login functionality on SauceDemo
 
+  Background:
+    Given user navigates to SauceDemo login page
+
   @login @Regression @sanity
   Scenario Outline: Validate login with valid credentials
-    Given user navigates to SauceDemo login page
     When user enters "<username>" and "<password>"
     Then user should see the product inventory page
     Examples:
@@ -11,7 +13,6 @@ Feature: Login functionality on SauceDemo
 
   @login @Regression
   Scenario Outline: Validate login with <scenario> credentials
-    Given user navigates to SauceDemo login page
     When user enters "<username>" and "<password>"
     Then  user should see "<errorMessage>" error on login screen
     Examples:
