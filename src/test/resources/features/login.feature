@@ -7,6 +7,7 @@ Feature: Login functionality on SauceDemo
   Scenario Outline: Validate login with valid credentials
     When user enters "<username>" and "<password>"
     Then user should see the product inventory page
+    And user logout
     Examples:
       | username      | password     |
       | standard_user | secret_sauce |

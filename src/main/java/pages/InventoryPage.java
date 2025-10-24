@@ -1,10 +1,17 @@
 package pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.*;
+import java.util.Arrays;
+import java.util.List;
+import org.testng.Assert;
+
 
 public class InventoryPage {
     private Page page;
     private String title = ".title";
+    private String menuItemEles = "a.bm-item.menu-item";
 
     public InventoryPage(Page page) {
         this.page = page;
@@ -12,5 +19,11 @@ public class InventoryPage {
 
     public boolean isOnInventoryPage() {
         return page.locator(title).innerText().equals("Products");
+    }
+    public void validateMenuItemList(){
+        Locator menuItems = page.locator(menuItemEles);
+        List<String> actualItems = menuItems.allTextContents();
+        List<String> expectedItems = Arrays.asList("All Items", "About", "Logout", "Reset App State");
+        Assert.assertTrue(actualItems.equals(expectedItems),"Menu item is not as per expectation");
     }
 }

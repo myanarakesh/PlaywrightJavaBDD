@@ -4,7 +4,6 @@ import hooks.Hooks;
 import pages.LoginPage;
 import pages.InventoryPage;
 import io.cucumber.java.en.*;
-
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
@@ -34,4 +33,10 @@ public class LoginSteps {
     public void userShouldSeeErrorOnLoginScreen(String message) {
         loginPage.validateErrorMessage(message);
     }
+
+    @Then("user logout")
+    public void user_logout() {
+        loginPage.logoutFromSauceDemo();
+    }
+
 }
