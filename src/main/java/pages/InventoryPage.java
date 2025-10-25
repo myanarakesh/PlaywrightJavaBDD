@@ -5,7 +5,8 @@ import com.microsoft.playwright.Page;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.*;
 import java.util.Arrays;
 import java.util.List;
-import org.testng.Assert;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 
 public class InventoryPage {
@@ -24,6 +25,6 @@ public class InventoryPage {
         Locator menuItems = page.locator(menuItemEles);
         List<String> actualItems = menuItems.allTextContents();
         List<String> expectedItems = Arrays.asList("All Items", "About", "Logout", "Reset App State");
-        Assert.assertTrue(actualItems.equals(expectedItems),"Menu item is not as per expectation");
+        assertTrue(actualItems.equals(expectedItems),"Menu item is not as per expectation");
     }
 }
