@@ -2,10 +2,7 @@ package pages;
 
 import Utilities.*;
 import com.microsoft.playwright.Page;
-
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-
 
 public class LoginPage {
     private Page page;
