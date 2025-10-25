@@ -24,7 +24,9 @@ public class LoginPage {
 
     // Actions
     public void navigateToLoginPage() {
-        page.navigate("https://www.saucedemo.com/");
+        ConfigReader.loadProperties();
+        page.navigate(ConfigReader.getProperty("baseURL"));
+//        page.navigate("https://www.saucedemo.com/");
         assertThat(page.locator(logoEle)).isVisible();
         assertThat(page).hasTitle("Swag Labs");
     }
@@ -32,7 +34,6 @@ public class LoginPage {
     public void enterUsername(String username) {
         page.fill(usernameFieldEle, username);
     }
-
     public void enterPassword(String password) {
         page.fill(passwordFieldEle, password);
     }
