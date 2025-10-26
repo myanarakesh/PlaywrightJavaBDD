@@ -43,13 +43,14 @@ public class Hooks {
                                 .setChannel("msedge")
                                 .setHeadless(headless));
                 break;
-            default:
+            case "chromium":
                 browser = playwright.chromium().launch(
                         new BrowserType
                                 .LaunchOptions()
                                 .setHeadless(headless));
+            default:
+                System.out.println("Correct your browser definition under configuration file");
         }
-//        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
         context = browser.newContext();
         page = context.newPage();
     }

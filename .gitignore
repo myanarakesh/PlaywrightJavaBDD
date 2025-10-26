@@ -1,0 +1,15 @@
+/allure-results
+/target/test-classes/config.properties
+/target/classes/Utilities/ConfigReader.class
+/target/cucumber.json
+/target/cucumber-report.html
+/target/test-classes/features/homePage.feature
+/target/test-classes/hooks/Hooks.class
+/target/classes/pages/InventoryPage.class
+/target/test-classes/stepDefinitions/InventorySteps.class
+/target/test-classes/features/login.feature
+/target/classes/pages/LoginPage.class
+/target/test-classes/stepDefinitions/LoginSteps.class
+/target/test-classes/runners/TestRunner.class
+/target/classes/Utilities/utils.class
+/target
