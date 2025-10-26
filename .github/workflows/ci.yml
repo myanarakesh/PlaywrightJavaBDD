@@ -1,0 +1,65 @@
+name: Playwright Automation Suite
+
+on:
+  schedule:
+    # Runs every day at 10:00 AM IST (04:30 AM UTC)
+    - cron: '30 4 * * *'
+  workflow_dispatch:  # allows manual trigger
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install browsers
+        run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
+
+      - name: Run tests with Maven
+        run: mvn clean test
+
+      - name: Generate Allure report
+        run: mvn allure:report
+
+      - name: Upload Allure report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin
+
+      - name: Send report email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Daily Playwright Automation Report - ${{ github.run_number }}"
+          to: "myanarocky@gmail.com"
+          from: "Playwright Automation <myanarocky@gmail.com>"
+          html_body: |
+            <h3>Daily Automation Run Report</h3>
+            <p>✅ Test run completed successfully at 10 AM IST.</p>
+            <p>📊 Download full report: 
+              <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                View Allure Report Artifact
+              </a>
+            </p>
+            <p><img src="cid:allure_snapshot.png" alt="Allure Summary" width="600"/></p>
+          attachments: allure-report-summary.png
