@@ -2,10 +2,10 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import org.testng.Assert;
+
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-
 
 
 public class InventoryPage {
@@ -20,10 +20,12 @@ public class InventoryPage {
     public boolean isOnInventoryPage() {
         return page.locator(title).innerText().equals("Products");
     }
-    public void validateMenuItemList(){
+
+    public void validateMenuItemList() {
         Locator menuItems = page.locator(menuItemEles);
         List<String> actualItems = menuItems.allTextContents();
         List<String> expectedItems = Arrays.asList("All Items", "About", "Logout", "Reset App State");
-        assertTrue(actualItems.equals(expectedItems),"Menu item is not as per expectation");
+        Assert.assertTrue(actualItems.equals(expectedItems),
+                "Menu item is not as per expectation. /nActual list : " + actualItems + "/nExpected List : " + expectedItems);
     }
 }
