@@ -55,8 +55,6 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "Daily Playwright Automation Report - ${{ github.run_number }}"
-          to: "myanarocky@gmail.com"
-          from: "Playwright Automation <myanarocky@gmail.com>"
           html_body: |
             Hi Team,
             
