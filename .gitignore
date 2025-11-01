@@ -13,3 +13,5 @@
 /target/test-classes/runners/TestRunner.class
 /target/classes/Utilities/utils.class
 /target
+/.allure
+/test-output-thread

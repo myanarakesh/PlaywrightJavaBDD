@@ -34,14 +34,18 @@ jobs:
       - name: Run tests with Maven
         run: mvn clean test
 
-      - name: Generate Allure report
-        run: mvn allure:report
+      - name: Archive Extent Report
+        if: always()
+        uses: actions/upload-artifcat@v4
+        with:
+          name: ExtentReport
+          path: target/ExtentReports
 
-      - name: Upload Allure report as artifact
+      - name: Upload Extent Report
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: target/site/allure-maven-plugin
+          name: ExtentReport
+          path: target/ExtentReports/
 
       - name: Send report email
         uses: dawidd6/action-send-mail@v3
@@ -54,12 +58,15 @@ jobs:
           to: "myanarocky@gmail.com"
           from: "Playwright Automation <myanarocky@gmail.com>"
           html_body: |
-            <h3>Daily Automation Run Report</h3>
-            <p>✅ Test run completed successfully at 10 AM IST.</p>
-            <p>📊 Download full report: 
-              <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">
-                View Allure Report Artifact
-              </a>
-            </p>
-            <p><img src="cid:allure_snapshot.png" alt="Allure Summary" width="600"/></p>
-          attachments: allure-report-summary.png
+            Hi Team,
+            
+            Please find attached the latest Playwright Extent Report for today's automation run.
+
+            📅 Date: ${{ github.run_started_at }}
+            📄 Repository: ${{ github.repository }}
+            
+            Regards,  
+            Playwright Automation Bot 🤖
+          to: "rakesh@example.com"
+          from: "Playwright Automation <${{ secrets.MAIL_USERNAME }}>"
+          attachments: target/ExtentReports/ExtentReport.html
