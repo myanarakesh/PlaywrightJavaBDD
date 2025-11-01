@@ -45,7 +45,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ExtentReport
+          name: ExtentReport-${{ github.run_number }}
           path: target/ExtentReports/
 
       - name: Send report email
