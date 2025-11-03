@@ -66,6 +66,6 @@ jobs:
             
             Regards,  
             Playwright Automation Bot 🤖
-          to: "<${{ secrets.MAIL_USERNAME }}>"
+          to: "myanarocky@gmail.com"
           from: "Playwright Automation <${{ secrets.MAIL_USERNAME }}>"
           attachments: target/ExtentReports/ExtentReport.html
