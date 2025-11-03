@@ -53,9 +53,11 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
+          username: myanarocky@gmail.com
+          password: qnnmhrokavwkqqdv
           subject: "Daily Playwright Automation Report - ${{ github.run_number }}"
+          to: "myanarakesh@outlook.com"
+          from: "Playwright Automation myanarocky@gmail.com"
           html_body: |
             Hi Team,
             
@@ -65,7 +67,5 @@ jobs:
             📄 Repository: ${{ github.repository }}
             
             Regards,  
-            Playwright Automation Bot 🤖
-          to: "myanarocky@gmail.com"
-          from: "Playwright Automation <${{ secrets.MAIL_USERNAME }}>"
+            Playwright Automation Bot
           attachments: target/ExtentReports/ExtentReport.html
