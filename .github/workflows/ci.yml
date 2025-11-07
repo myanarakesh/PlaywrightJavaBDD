@@ -34,6 +34,18 @@ jobs:
       - name: Run tests with Maven
         run: mvn clean test
 
+      - name: Start Xvfb
+        run: |
+          sudo apt -apt update
+          sudo apt -y install xvfb
+          Xvfb :99 -screen 0 1920x1080x24 &
+          export DISPLAY=:99
+
+      - name: Run Playwright Tests
+        run: mvn test
+        env:
+          DISPLAY: :99
+
       - name: Archive Extent Report
         if: always()
         uses: actions/upload-artifact@v4
