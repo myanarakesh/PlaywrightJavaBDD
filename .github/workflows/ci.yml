@@ -48,24 +48,24 @@ jobs:
           name: ExtentReport-${{ github.run_number }}
           path: target/ExtentReports/
 
-      - name: Send report email
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: myanarocky@gmail.com
-          password: qnnmhrokavwkqqdv
-          subject: "Daily Playwright Automation Report - ${{ github.run_number }}"
-          to: "myanarakesh@outlook.com"
-          from: "Playwright Automation myanarocky@gmail.com"
-          html_body: |
-            Hi Team,
-            
-            Please find attached the latest Playwright Extent Report for today's automation run.
-
-            📅 Date: ${{ github.run_started_at }}
-            📄 Repository: ${{ github.repository }}
-            
-            Regards,  
-            Playwright Automation Bot
-          attachments: target/ExtentReports/ExtentReport.html
+#      - name: Send report email
+#        uses: dawidd6/action-send-mail@v3
+#        with:
+#          server_address: smtp.gmail.com
+#          server_port: 465
+#          username: myanarocky@gmail.com
+#          password: qnnmhrokavwkqqdv
+#          subject: "Daily Playwright Automation Report - ${{ github.run_number }}"
+#          to: "myanarakesh@outlook.com"
+#          from: "Playwright Automation myanarocky@gmail.com"
+#          html_body: |
+#            Hi Team,
+#
+#            Please find attached the latest Playwright Extent Report for today's automation run.
+#
+#            📅 Date: ${{ github.run_started_at }}
+#            📄 Repository: ${{ github.repository }}
+#
+#            Regards,
+#            Playwright Automation Bot
+#          attachments: target/ExtentReports/ExtentReport.html
