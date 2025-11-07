@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs every day at 10:00 AM IST (04:30 AM UTC)
     - cron: '30 4 * * *'
-  workflow_dispatch:  # allows manual trigger
+  workflow_dispatch:
 
 jobs:
   test:
@@ -28,32 +28,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Install browsers
+      - name: Install Playwright Browsers
         run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 
-      - name: Start Xvfb
+      - name: Start Xvfb for Headed Mode
         run: |
-          sudo apt -apt update
-          sudo apt -y install xvfb
+          sudo apt-get update
+          sudo apt-get install -y xvfb
           Xvfb :99 -screen 0 1920x1080x24 &
-          export DISPLAY=:99
+          echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Run Playwright Tests
-        run: mvn test
+        run: mvn clean test
         env:
           DISPLAY: :99
 
-      - name: Run tests with Maven
-        run: mvn clean test
-
-      - name: Archive Extent Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ExtentReport
-          path: target/ExtentReports
-
-      - name: Upload Extent Report
+      - name: Upload Extent Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
