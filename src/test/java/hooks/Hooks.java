@@ -1,107 +1,67 @@
 package hooks;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Page;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
+import hooks.DriverFactory;
 import Utilities.ConfigReader;
 
+import java.nio.file.*;
+import java.util.Base64;
+
 public class Hooks {
-    public static Playwright playwright;
-    public static Browser browser;
-    public static Page page;
-    public static BrowserContext context;
+
     private static int stepCounter = 1;
+    private Page page;
 
     @Before
     public void setUp() {
-        ConfigReader.loadProperties();
-        boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
-
-        playwright = Playwright.create();
-        switch (ConfigReader.getProperty("browser").toLowerCase()) {
-            case "firefox":
-                browser = playwright.firefox().launch(
-                        new BrowserType
-                                .LaunchOptions()
-                                .setHeadless(headless));
-                break;
-            case "webkit":
-                browser = playwright.webkit().launch(
-                        new BrowserType
-                                .LaunchOptions()
-                                .setHeadless(headless));
-                break;
-            case "edge":
-                browser = playwright.chromium().launch(
-                        new BrowserType.LaunchOptions()
-                                .setChannel("msedge")
-                                .setHeadless(headless));
-                break;
-            case "chromium":
-                browser = playwright.chromium().launch(
-                        new BrowserType
-                                .LaunchOptions()
-                                .setHeadless(headless));
-            default:
-                System.out.println("Correct your browser definition under configuration file");
-        }
-        context = browser.newContext();
-        page = context.newPage();
+        DriverFactory.initBrowser();
+        page = DriverFactory.getPage();
     }
 
     @AfterStep
     public void takeScreenshotAfterEachStep(Scenario scenario) {
-        if (ConfigReader.getProperty("screenshotMode").equals("each_step")) {
-            try {
-                if (page != null) {
-                    // Create screenshot folder if not exist
-                    Path screenshotDir = Paths.get("target/ExtentReports/screenshots");
-                    if (!Files.exists(screenshotDir)) {
-                        Files.createDirectories(screenshotDir);
-                    }
-                    // Generate unique screenshot name
-                    String stepName = scenario.getName().replaceAll("[^a-zA-Z0-9]", "_");
-                    String fileName = "Step_" + stepCounter + "_" + stepName + ".png";
-                    Path filePath = screenshotDir.resolve(fileName);
 
-                    // Take screenshot
-                    page.screenshot(new Page.ScreenshotOptions().setPath(filePath));
+        if (!ConfigReader.getProperty("screenshotMode").equals("each_step")) {
+            return;
+        }
 
-                    // Attach to Extent / Allure report
-                    byte[] fileContent = Files.readAllBytes(filePath);
-                    String encoded = Base64.getEncoder().encodeToString(fileContent);
-
-                    scenario.log("<b>Step Screenshot:</b>");
-                    scenario.log("<img src=\"data:image/png;base64," + encoded + "\" width=\"600\" />");
-
-                    stepCounter++;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            Path screenshotDir = Paths.get("target/ExtentReports/screenshots");
+            if (!Files.exists(screenshotDir)) {
+                Files.createDirectories(screenshotDir);
             }
+
+            String stepName = scenario.getName().replaceAll("[^a-zA-Z0-9]", "_");
+            String fileName = "Step_" + stepCounter + "_" + stepName + ".png";
+            Path filePath = screenshotDir.resolve(fileName);
+
+            page.screenshot(new Page.ScreenshotOptions().setPath(filePath));
+
+            byte[] fileContent = Files.readAllBytes(filePath);
+            String encoded = Base64.getEncoder().encodeToString(fileContent);
+
+            scenario.log("<b>Screenshot:</b>");
+            scenario.log("<img src=\"data:image/png;base64," + encoded + "\" width=\"600\" />");
+
+            stepCounter++;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @After
     public void tearDown(Scenario scenario) {
+
         if (ConfigReader.getProperty("screenshotMode").equals("end_only")) {
-            if (scenario.isFailed()) {
-                byte[] screenshot = page.screenshot();
-                scenario.attach(screenshot, "image/png", "FailedStepScreenshot");
-            } else {
-                // Optional: Capture screenshots for every step (not just failed)
-                byte[] screenshot = page.screenshot();
-                scenario.attach(screenshot, "image/png", "StepScreenshot");
-            }
+            byte[] screenshot = page.screenshot();
+            scenario.attach(screenshot, "image/png", "EndOfScenario");
         }
-        context.close();
-        browser.close();
-        playwright.close();
+
+        DriverFactory.closeBrowser();
     }
 }

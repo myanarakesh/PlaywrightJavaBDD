@@ -1,6 +1,6 @@
 package stepDefinitions;
 
-import hooks.Hooks;
+import hooks.DriverFactory;
 import pages.LoginPage;
 import pages.InventoryPage;
 import io.cucumber.java.en.*;
@@ -12,13 +12,13 @@ public class LoginSteps {
 
     @Given("user navigates to SauceDemo login page")
     public void user_navigates_to_sauce_demo_login_page() {
-        loginPage = new LoginPage(Hooks.page);
+        loginPage = new LoginPage(DriverFactory.getPage());
         loginPage.navigateToLoginPage();
     }
 
     @Then("user should see the product inventory page")
     public void user_should_see_the_product_inventory_page() {
-        inventoryPage = new InventoryPage(Hooks.page);
+        inventoryPage = new InventoryPage(DriverFactory.getPage());
         assertTrue(inventoryPage.isOnInventoryPage());
     }
 
