@@ -11,41 +11,51 @@ public class DriverFactory {
     private static Page page;
 
     public static void initBrowser() {
-        ConfigReader.loadProperties();
-
-        boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
-        String browserName = ConfigReader.getProperty("browser").toLowerCase();
-
-        playwright = Playwright.create();
-
-        switch (browserName) {
-            case "firefox":
-                browser = playwright.firefox().launch(
-                        new BrowserType.LaunchOptions().setHeadless(headless));
-                break;
-
-            case "webkit":
-                browser = playwright.webkit().launch(
-                        new BrowserType.LaunchOptions().setHeadless(headless));
-                break;
-
-            case "edge":
-                browser = playwright.chromium().launch(
-                        new BrowserType.LaunchOptions()
-                                .setChannel("msedge")
-                                .setHeadless(headless));
-                break;
-
-            case "chromium":
-                browser = playwright.chromium().launch(
-                        new BrowserType.LaunchOptions().setHeadless(headless));
-                break;
-
-            default:
-                throw new RuntimeException("Invalid browser in config.properties: " + browserName);
+        if (playwright == null) {
+            System.out.println(">>> Creating Playwright instance");
+            playwright = Playwright.create();
         }
 
+        if (browser == null) {
+            ConfigReader.loadProperties();
+
+            boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
+            String browserName = ConfigReader.getProperty("browser").toLowerCase();
+
+            System.out.println(">>> Launching browser: " + browserName);
+
+            switch (browserName) {
+                case "firefox":
+                    browser = playwright.firefox().launch(
+                            new BrowserType.LaunchOptions().setHeadless(headless));
+                    break;
+
+                case "webkit":
+                    browser = playwright.webkit().launch(
+                            new BrowserType.LaunchOptions().setHeadless(headless));
+                    break;
+
+                case "edge":
+                    browser = playwright.chromium().launch(
+                            new BrowserType.LaunchOptions()
+                                    .setChannel("msedge")
+                                    .setHeadless(headless));
+                    break;
+
+                case "chromium":
+                    browser = playwright.chromium().launch(
+                            new BrowserType.LaunchOptions().setHeadless(headless));
+                    break;
+
+                default:
+                    throw new RuntimeException("Invalid browser in config.properties: " + browserName);
+            }
+        }
+
+        System.out.println(">>> Creating a fresh browser context");
         context = browser.newContext();
+
+        System.out.println(">>> Opening new browser page");
         page = context.newPage();
     }
 
@@ -53,13 +63,13 @@ public class DriverFactory {
         return page;
     }
 
-//    public static BrowserContext getContext() {
-//        return context;
-//    }
-
     public static void closeBrowser() {
         if (context != null) context.close();
         if (browser != null) browser.close();
         if (playwright != null) playwright.close();
+
+        context = null;
+        browser = null;
+        playwright = null;
     }
 }

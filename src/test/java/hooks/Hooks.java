@@ -20,6 +20,7 @@ public class Hooks {
     public void setUp() {
         DriverFactory.initBrowser();
         page = DriverFactory.getPage();
+        System.out.println(">>> Hooks BEFORE triggered");
     }
 
     @AfterStep
