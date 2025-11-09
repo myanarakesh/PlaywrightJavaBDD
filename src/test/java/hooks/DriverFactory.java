@@ -12,7 +12,6 @@ public class DriverFactory {
 
     public static void initBrowser() {
         if (playwright == null) {
-            System.out.println(">>> Creating Playwright instance");
             playwright = Playwright.create();
         }
 
@@ -21,8 +20,6 @@ public class DriverFactory {
 
             boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
             String browserName = ConfigReader.getProperty("browser").toLowerCase();
-
-            System.out.println(">>> Launching browser: " + browserName);
 
             switch (browserName) {
                 case "firefox":
@@ -52,10 +49,11 @@ public class DriverFactory {
             }
         }
 
-        System.out.println(">>> Creating a fresh browser context");
-        context = browser.newContext();
+        context = browser.newContext(
+                new Browser.NewContextOptions()
+                        .setViewportSize(1920, 1080)
+        );
 
-        System.out.println(">>> Opening new browser page");
         page = context.newPage();
     }
 
